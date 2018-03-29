@@ -471,7 +471,7 @@ if __name__ == "__main__":
 
     graph_str = draw_graph_from_cache(target_hostname)
 
-    if not any(x in graph_str for x in ['#ff0000', '#ff7700', '#fff200']):
+    if any(x in graph_str for x in ['#ff0000', '#ff7700', '#fff200']):
         # Render graph image
         grapher = pgv.AGraph(
             graph_str
