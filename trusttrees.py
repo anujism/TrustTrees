@@ -469,31 +469,34 @@ if __name__ == "__main__":
 
     enumerate_nameservers( target_hostname )
 
-    # Render graph image
-    grapher = pgv.AGraph(
-        draw_graph_from_cache( target_hostname )
-    )
+    graph_str = draw_graph_from_cache(target_hostname)
 
-    output_graph_file = "./output/" + target_hostname + "_trust_tree_graph."
+    if not any(x in graph_str for x in ['#ff0000', '#ff7700', '#fff200']):
+        # Render graph image
+        grapher = pgv.AGraph(
+            graph_str
+        )
 
-    export_formats = []
-    if args.export_formats:
-        export_parts = args.export_formats.split( "," )
-        for part in export_parts:
-            export_formats.append( part.strip() )
-    else:
-        export_formats.append( "png" )
+        output_graph_file = "./output/" + target_hostname + "_trust_tree_graph."
 
-    for export_format in export_formats:
-        file_name = output_graph_file + export_format
-        try:
-            os.mkdir("output")
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
-        grapher.draw( file_name, prog="dot" )
-        if args.open:
-            print( "[ STATUS ] Opening final graph..." )
-            subprocess_call( [ "open", file_name ])
+        export_formats = []
+        if args.export_formats:
+            export_parts = args.export_formats.split( "," )
+            for part in export_parts:
+                export_formats.append( part.strip() )
+        else:
+            export_formats.append( "png" )
 
-    print( "[ SUCCESS ] Finished generating graph!" )
+        for export_format in export_formats:
+            file_name = output_graph_file + export_format
+            try:
+                os.mkdir("output")
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
+            grapher.draw( file_name, prog="dot" )
+            if args.open:
+                print( "[ STATUS ] Opening final graph..." )
+                subprocess_call( [ "open", file_name ])
+
+        print( "[ SUCCESS ] Finished generating graph!" )

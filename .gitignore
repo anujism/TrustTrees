@@ -3,3 +3,4 @@ graphs/*
 .DS_Store
 *.png
 *.dot
+.idea/
